@@ -1,4 +1,4 @@
-from enum import Enum, auto
+from enum import Enum
 from typing import Self
 
 
@@ -13,33 +13,28 @@ class Loc:
         AND = "and"
         PARENT = ">"
 
-    def __init__(self, key: Key = "", val: str = "", loc_str: str = "") -> None:
+    def __init__(self, key: Key = Key.ID, val: str = "") -> None:
         self.key = key
         self.val = val
-        self.loc_str = ""
-
-        if loc_str:
-            self.loc_str = loc_str
-            return
-        if key:
-            self.loc_str += f"{key.value}:"
-        if val and " " not in val:
-            self.loc_str += val
-        else:
+        if " " in val:
             # empty values or values with space characters must be quoted!
-            self.loc_str += f'"{val}"'
+            self.loc = f'{self.key}:"{self.val}"'
+        else:
+            self.loc = f"{self.key}:{self.val}"
 
     def __add__(self, rhs: Self) -> Self:
-        return Loc(loc_str=f"{self.loc_str} {Loc.Op.AND.value} {rhs.loc_str}")
+        self.loc = f"{self.loc} {Loc.Op.AND.value} {rhs}"
+        return self
 
     def __gt__(self, rhs: Self) -> Self:
-        return Loc(loc_str=f"{self.loc_str} {Loc.Op.PARENT.value} {rhs.loc_str}")
+        self.loc = f"{self.loc} {Loc.Op.PARENT.value} {rhs}"
+        return self
 
     def __str__(self) -> str:
-        return self.loc_str
+        return self.loc
 
     def __repr__(self) -> str:
-        return f"Loc.from_str({self.loc_str})"
+        return f"{type(self).__name__}({self.key}, {self.val})"
 
 
 class LocType(Enum):
@@ -49,14 +44,22 @@ class LocType(Enum):
 
 
 class Locator(Enum):
-    LOC_1 = str(Loc(Loc.Key.ID, " 1 ") + Loc(Loc.Key.NAME, ""))
-    LOC_2 = str(Loc(Loc.Key.ID, "ID 4"))
-    LOC_3 = str(Loc(Loc.Key.ID, "ID 1") + Loc(Loc.Key.CLASS, "CLASS 2") + Loc(Loc.Key.NAME, "NAME 3"))
-    LOC_4 = str(
-        LocType.BUTTON.value + Loc(Loc.Key.CLASS, "CLASS 332") + Loc(Loc.Key.NAME, "NAME-4") > Loc(Loc.Key.ID, "_id_"))
-    LOC_5 = str(LocType.COMBO_BOX.value)
-    LOC_6 = str(LocType.BUTTON.value + Loc(Loc.Key.ID, "U"))
-    LOC_7 = str(LocType.EDIT.value > Loc(Loc.Key.NAME))
+    LOC_1 = Loc(Loc.Key.ID, " 1 ") + Loc(Loc.Key.NAME, "")
+    LOC_2 = Loc(Loc.Key.ID, "ID 4")
+
+    LOC_3 = (
+        Loc(Loc.Key.ID, "ID 1")
+        + Loc(Loc.Key.CLASS, "CLASS 2")
+        + Loc(Loc.Key.NAME, "NAME 3")
+    )
+
+    LOC_4 = LocType.BUTTON.value + Loc(Loc.Key.CLASS, "CLASS 332") + Loc(
+        Loc.Key.NAME, "NAME-4"
+    ) > Loc(Loc.Key.ID, "_id_")
+
+    LOC_5 = LocType.COMBO_BOX.value
+    LOC_6 = LocType.BUTTON.value + Loc(Loc.Key.ID, "U")
+    LOC_7 = LocType.EDIT.value > Loc(Loc.Key.NAME)
 
 
 def main() -> None:
