@@ -8,6 +8,7 @@ from locator import (
     COMBO,
     LIST_ITEM,
     ID,
+    TYPE,
     NAME,
     make_elem,
     make_tree,
@@ -23,13 +24,13 @@ from locator import (
             (ID("negateButton"), BUTTON),
             "id:negateButton type:button",
         ),
-        ((Attribute._id(""), TEXT), "id: type:text"),
+        ((ID(""), TEXT), 'id:"" type:text'),
         (
-            (Attribute._name(" NAME X "), TEXT),
+            (NAME(" NAME X "), TEXT),
             'name:" NAME X " type:text',
         ),
         (
-            (Attribute._class("C_105 "), COMBO),
+            (CLASS("C_105 "), COMBO),
             'class:"C_105 " type:combobox',
         ),
     ],
@@ -57,9 +58,9 @@ def test_single_attribute_locator(attr, expected: str) -> None:
 @pytest.mark.parametrize(
     "attr, expected",
     [
-        (Attribute._id("ID 0"), 'id:"ID 0"'),
-        (Attribute._class(" "), 'class:" "'),
-        (Attribute._name(" _my name-"), 'name:" _my name-"'),
+        (ID("ID 0"), 'id:"ID 0"'),
+        (CLASS(" "), 'class:" "'),
+        (NAME(" _my name-"), 'name:" _my name-"'),
         (COMBO, "type:combobox"),
         (TEXT, "type:text"),
         (BUTTON, "type:button"),
@@ -73,11 +74,11 @@ def test_single_attribute_as_string(attr, expected: str) -> None:
 
 def test_create_locator_from_list() -> None:
     loc = [
-        Attribute._id("I D"),
+        ID("I D"),
         BUTTON,
-        Attribute._class("C-7"),
-        Attribute._name("long-name-47"),
-        Attribute._type("ty pe"),
+        CLASS("C-7"),
+        NAME("long-name-47"),
+        TYPE("ty pe"),
     ]
     assert (
         make_elem(*loc)
@@ -88,9 +89,9 @@ def test_create_locator_from_list() -> None:
 def test_create_locator_from_tuple() -> None:
     elem = (
         BUTTON,
-        Attribute._id("ID-3"),
-        Attribute._class("buttonClass"),
-        Attribute._name("long name 47"),
+        ID("ID-3"),
+        CLASS("buttonClass"),
+        NAME("long name 47"),
     )
     assert (
         make_elem(*elem) == 'type:button id:ID-3 class:buttonClass name:"long name 47"'
@@ -101,11 +102,11 @@ def test_create_locator_from_tuple() -> None:
     "elems, expected",
     [
         (
-            (BUTTON, Attribute._id("ID"), Attribute._name("NAME ")),
+            (BUTTON, ID("ID"), NAME("NAME ")),
             'type:button > id:ID > name:"NAME "',
         ),
         (
-            (Attribute._id("ID-55"),),
+            (ID("ID-55"),),
             "id:ID-55",
         ),
     ],

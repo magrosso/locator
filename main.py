@@ -1,10 +1,21 @@
-from locator import Attribute, CLASS, ID, NAME, BUTTON, make_elem, make_tree
+from enum import Enum, unique
+from locator import (
+    Attribute,
+    CLASS,
+    TYPE,
+    ID,
+    NAME,
+    BUTTON,
+    make_elem,
+    make_tree,
+    elem_dict,
+)
 
 
 loc_4 = Attribute._name("N")
 
-a1 = Attribute._type("a1")
-a2 = Attribute._class("a2")
+a1 = TYPE("a1")
+a2 = CLASS("a2")
 
 e1: str = make_elem(BUTTON)
 e2: str = make_elem(CLASS("C"), ID("id"), NAME("N"))
@@ -15,9 +26,15 @@ t2: str = make_tree(e1)
 t3: str = make_tree(ID("ID-33"), NAME(" N7"), BUTTON)
 
 
-def print_locator(elem: str) -> None:
-    print(f"\tLocator: '{elem}'")
+@unique
+class Locs(Enum):
+    L1 = make_tree(ID("ID-33"), NAME(" N7"), BUTTON)
+    L2 = make_elem(ID("ID-33"), NAME(" N7"), BUTTON)
+    L3 = make_elem(ID("ID 0"))
+    L4 = make_tree(ID("ID 1"))
 
 
-for loc in e1, e2, e3, t1, t2, t3:
-    print_locator(loc)
+for num, loc in enumerate(Locs, 1):
+    print(f"{num}: '{loc.value}'")
+
+print(elem_dict(BUTTON, CLASS("2")))
