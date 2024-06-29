@@ -1,82 +1,80 @@
-from enum import Enum
 from typing import Self
+from functools import partialmethod
+from enum import Enum
 
 
-class Loc:
-    class Key(Enum):
-        ID = "id"
-        CLASS = "class"
-        TYPE = "type"
-        NAME = "name"
+class AttrKey(Enum):
+    ID = "id"
+    TYPE = "type"
+    CLASS = "class"
+    NAME = "name"
 
-    class Op(Enum):
-        AND = "and"
-        PARENT = ">"
 
-    def __init__(self, key: Key = Key.ID, val: str = "") -> None:
-        self.key = key
-        self.val = val
-        if " " in val:
-            # empty values or values with space characters must be quoted!
-            self.loc = f'{self.key}:"{self.val}"'
-        else:
-            self.loc = f"{self.key}:{self.val}"
+class Attribute:
+    """Locator attribute of format <key>:<value>"""
 
-    def __add__(self, rhs: Self) -> Self:
-        self.loc = f"{self.loc} {Loc.Op.AND.value} {rhs}"
-        return self
+    def __init__(self, key: AttrKey, value: str):
+        self.key = key.value
+        self.value = f'"{value}"' if " " in value else value
 
-    def __gt__(self, rhs: Self) -> Self:
-        self.loc = f"{self.loc} {Loc.Op.PARENT.value} {rhs}"
-        return self
+    @classmethod
+    def from_id(cls, id_val: str):
+        return cls(AttrKey.ID, id_val)
+
+    @classmethod
+    def from_name(cls, name_val: str):
+        return cls(AttrKey.NAME, name_val)
+
+    @classmethod
+    def from_type(cls, type_val: str):
+        return cls(AttrKey.TYPE, type_val)
+
+    @classmethod
+    def from_class(cls, class_val: str):
+        return cls(AttrKey.CLASS, class_val)
+
+    button = partialmethod(from_type, type_val="button")
+    text = partialmethod(from_type, type_val="text")
+    combo = partialmethod(from_type, type_val="combobox")
+    list_item = partialmethod(from_type, type_val="listItem")
 
     def __str__(self) -> str:
-        return self.loc
-
-    def __repr__(self) -> str:
-        return f"{type(self).__name__}({self.key}, {self.val})"
+        return f"{self.key}:{self.value}"
 
 
-class LocType(Enum):
-    BUTTON = Loc(Loc.Key.TYPE, "BUTTON")
-    EDIT = Loc(Loc.Key.TYPE, "EDIT")
-    COMBO_BOX = Loc(Loc.Key.TYPE, "COMBOBOX")
+BUTTON = Attribute.button()
+TEXT = Attribute.text()
+COMBO = Attribute.combo()
+LIST = Attribute.list_item()
 
 
-class Locator(Enum):
-    LOC_1 = Loc(Loc.Key.ID, " 1 ") + Loc(Loc.Key.NAME, "")
-    LOC_2 = Loc(Loc.Key.ID, "ID 4")
+class Element:
+    """Create an Element object from one or more Attributes.
+    An Element is a space-separated list of Attributes identifying a single UI element"""
 
-    LOC_3 = (
-        Loc(Loc.Key.ID, "ID 1")
-        + Loc(Loc.Key.CLASS, "CLASS 2")
-        + Loc(Loc.Key.NAME, "NAME 3")
-    )
+    def __init__(self, *attrs: Attribute):
+        self.attrs: list[Attribute] = list(attrs)
+        self.elem: str = self.from_attr()
 
-    LOC_4 = LocType.BUTTON.value + Loc(Loc.Key.CLASS, "CLASS 332") + Loc(
-        Loc.Key.NAME, "NAME-4"
-    ) > Loc(Loc.Key.ID, "_id_")
+    def from_attr(self) -> str:
+        return " ".join([f"{attr.key}:{attr.value}" for attr in self.attrs])
 
-    LOC_5 = LocType.COMBO_BOX.value
-    LOC_6 = LocType.BUTTON.value + Loc(Loc.Key.ID, "U")
-    LOC_7 = LocType.EDIT.value > Loc(Loc.Key.NAME)
+    def __str__(self) -> str:
+        return self.elem
 
 
-def main() -> None:
-    loc_x = Loc(Loc.Key.ID, "I3")
-    loc_y = loc_x + Loc(Loc.Key.CLASS, "C")
-    loc_z = Loc(Loc.Key.CLASS, "C") + loc_x
-    print(loc_x)
-    print(loc_y)
-    print(loc_z)
-    print(Locator.LOC_1.value)
-    print(Locator.LOC_2.value)
-    print(Locator.LOC_3.value)
-    print(Locator.LOC_4.value)
-    print(Locator.LOC_5.value)
-    print(Locator.LOC_6.value)
-    print(Locator.LOC_7.value)
+class Tree:
+    """Create a Tree from Element objects.
+    A Tree object is a ">" separated list of Elements.
+    The ">" denotes a parent-child relationship with the left Element being the parent of the Element on the right.
+    """
 
+    def __init__(self, *elems: Element):
+        self.elems = list(elems)
+        self.tree: str = self.from_elems()
 
-if __name__ == "__main__":
-    main()
+    def from_elems(self) -> str:
+        return " > ".join(str(elem) for elem in self.elems)
+
+    def __str__(self) -> str:
+        return self.tree
