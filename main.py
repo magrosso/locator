@@ -1,29 +1,23 @@
-from locator import Tree, Attribute, Element, BUTTON, COMBO, TEXT
-
-elem_1 = Element(BUTTON)
-elem_2 = Element(COMBO, Attribute.from_id("ID-2"))
-tree_1 = Tree(elem_1, elem_2)
-tree_2 = Tree(
-    Element(Attribute.from_name("name"), TEXT),
-    Element(BUTTON, Attribute.from_class("CLx3")),
-)
-tree_3 = Tree(Attribute.from_id("locator with id only"))
+from locator import Attribute, CLASS, ID, NAME, BUTTON, make_elem, make_tree
 
 
-def print_element(elem: str | Element) -> None:
-    if isinstance(elem, Element):
-        elem = str(elem)
-    print(f"Element: {elem}")
+loc_4 = Attribute._name("N")
+
+a1 = Attribute._type("a1")
+a2 = Attribute._class("a2")
+
+e1: str = make_elem(BUTTON)
+e2: str = make_elem(CLASS("C"), ID("id"), NAME("N"))
+e3: str = make_elem(a1, a2)
+
+t1: str = make_tree(e3, e2, e1)
+t2: str = make_tree(e1)
+t3: str = make_tree(ID("ID-33"), NAME(" N7"), BUTTON)
 
 
-def print_tree(tree: str | Tree) -> None:
-    if isinstance(tree, Tree):
-        tree = str(tree)
-    print(f"Tree: {tree}")
+def print_locator(elem: str) -> None:
+    print(f"\tLocator: '{elem}'")
 
 
-for elem in elem_1, elem_2:
-    print_element(elem)
-
-for tree in (tree_1, tree_2, tree_3):
-    print_tree(tree)
+for loc in e1, e2, e3, t1, t2, t3:
+    print_locator(loc)
