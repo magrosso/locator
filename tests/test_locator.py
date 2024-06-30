@@ -1,7 +1,7 @@
 import pytest
 
-from locator import (
-    Attribute,
+
+from src.locator.locator import (
     BUTTON,
     CLASS,
     TEXT,

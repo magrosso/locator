@@ -1,0 +1,69 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "locator"
+dynamic = ["version"]
+description = ''
+readme = "README.md"
+requires-python = ">=3.8"
+license = "MIT"
+keywords = []
+authors = [
+  { name = "matteo", email = "matteo@delgrosso.de" },
+]
+classifiers = [
+  "Development Status :: 4 - Beta",
+  "Programming Language :: Python",
+  "Programming Language :: Python :: 3.8",
+  "Programming Language :: Python :: 3.9",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: Implementation :: CPython",
+  "Programming Language :: Python :: Implementation :: PyPy",
+]
+dependencies = ["pytest", "ruff"]
+
+[project.urls]
+Documentation = "https://github.com/matteo/locator#readme"
+Issues = "https://github.com/matteo/locator/issues"
+Source = "https://github.com/matteo/locator"
+
+[tool.hatch.version]
+path = "src/locator/__about__.py"
+
+[tool.hatch.envs.default]
+path="env"
+
+[tool.hatch.envs.types]
+extra-dependencies = [
+  "mypy>=1.0.0",
+]
+[tool.hatch.envs.types.scripts]
+check = "mypy --install-types --non-interactive {args:src/locator tests}"
+
+[tool.coverage.run]
+source_pkgs = ["locator", "tests"]
+branch = true
+parallel = true
+omit = [
+  "src/locator/__about__.py",
+]
+
+[tool.coverage.paths]
+locator = ["src/locator", "*/locator/src/locator"]
+tests = ["tests", "*/locator/tests"]
+
+[tool.coverage.report]
+exclude_lines = [
+  "no cov",
+  "if __name__ == .__main__.:",
+  "if TYPE_CHECKING:",
+]
+
+[tool.ruff]
+extend-select = ["C4", "SIM", "TCH", "UP"]
+ignore = []
+show-fixes = true

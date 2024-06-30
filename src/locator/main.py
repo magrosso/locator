@@ -1,4 +1,5 @@
 from enum import Enum, unique
+
 from locator import (
     Attribute,
     CLASS,
@@ -10,7 +11,6 @@ from locator import (
     make_tree,
     elem_dict,
 )
-
 
 loc_4 = Attribute._name("N")
 
