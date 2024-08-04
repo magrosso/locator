@@ -2,49 +2,49 @@ import pytest
 
 from src.locator.locator import (
     BUTTON,
-    CLASS,
+    class_,
     COMBO,
-    ID,
+    id_,
     LIST_ITEM,
-    NAME,
+    name_,
     TEXT,
-    TYPE,
+    type_,
     cat_and,
-    add,
-    tree,
+    and_cat,
+    tree_cat,
 )
 
 
 @pytest.mark.parametrize(
     "attrs, expected",
     [
-        ((ID("ID 0"),), 'id:"ID 0"'),
-        ((CLASS(" "),), 'class:" "'),
+        ((id_("ID 0"),), 'id:"ID 0"'),
+        ((class_(" "),), 'class:" "'),
         (
-            (ID("negateButton"), BUTTON),
+            (id_("negateButton"), BUTTON),
             "id:negateButton type:button",
         ),
-        ((ID(""), TEXT), 'id:"" type:text'),
+        ((id_(""), TEXT), 'id:"" type:text'),
         (
-            (NAME(" NAME X "), TEXT),
+            (name_(" NAME X "), TEXT),
             'name:" NAME X " type:text',
         ),
         (
-            (CLASS("C_105 "), COMBO),
+            (class_("C_105 "), COMBO),
             'class:"C_105 " type:combobox',
         ),
     ],
 )
 def test_multiple_attributes_locator(attrs, expected: str) -> None:
-    assert add(*attrs) == expected
+    assert and_cat(*attrs) == expected
 
 
 @pytest.mark.parametrize(
     "attr, expected",
     [
-        (ID("ID 0"), 'id:"ID 0"'),
-        (CLASS(" "), 'class:" "'),
-        (NAME(" _my name-"), 'name:" _my name-"'),
+        (id_("ID 0"), 'id:"ID 0"'),
+        (class_(" "), 'class:" "'),
+        (name_(" _my name-"), 'name:" _my name-"'),
         (COMBO, "type:combobox"),
         (TEXT, "type:text"),
         (BUTTON, "type:button"),
@@ -52,15 +52,15 @@ def test_multiple_attributes_locator(attrs, expected: str) -> None:
     ],
 )
 def test_single_attribute_locator(attr, expected: str) -> None:
-    assert add(attr) == expected
+    assert and_cat(attr) == expected
 
 
 @pytest.mark.parametrize(
     "attr, expected",
     [
-        (ID("ID 0"), 'id:"ID 0"'),
-        (CLASS(" "), 'class:" "'),
-        (NAME(" _my name-"), 'name:" _my name-"'),
+        (id_("ID 0"), 'id:"ID 0"'),
+        (class_(" "), 'class:" "'),
+        (name_(" _my name-"), 'name:" _my name-"'),
         (COMBO, "type:combobox"),
         (TEXT, "type:text"),
         (BUTTON, "type:button"),
@@ -68,20 +68,20 @@ def test_single_attribute_locator(attr, expected: str) -> None:
     ],
 )
 def test_single_attribute_as_string(attr, expected: str) -> None:
-    assert add(attr) == expected
+    assert and_cat(attr) == expected
     assert f"{attr}" == expected
 
 
 def test_create_locator_from_list() -> None:
     loc = [
-        ID("I D"),
+        id_("I D"),
         BUTTON,
-        CLASS("C-7"),
-        NAME("long-name-47"),
-        TYPE("ty pe"),
+        class_("C-7"),
+        name_("long-name-47"),
+        type_("ty pe"),
     ]
     assert (
-            add(*loc)
+            and_cat(*loc)
             == 'id:"I D" type:button class:C-7 name:long-name-47 type:"ty pe"'
     )
 
@@ -89,12 +89,12 @@ def test_create_locator_from_list() -> None:
 def test_create_locator_from_tuple() -> None:
     elem = (
         BUTTON,
-        ID("ID-3"),
-        CLASS("buttonClass"),
-        NAME("long name 47"),
+        id_("ID-3"),
+        class_("buttonClass"),
+        name_("long name 47"),
     )
     assert (
-            add(*elem) == 'type:button id:ID-3 class:buttonClass name:"long name 47"'
+            and_cat(*elem) == 'type:button id:ID-3 class:buttonClass name:"long name 47"'
     )
 
 
@@ -102,25 +102,25 @@ def test_create_locator_from_tuple() -> None:
     "elems, expected",
     [
         (
-            (BUTTON, ID("ID"), NAME("NAME ")),
+            (BUTTON, id_("ID"), name_("NAME ")),
             'type:button > id:ID > name:"NAME "',
         ),
         (
-            (ID("ID-55"),),
+            (id_("ID-55"),),
             "id:ID-55",
         ),
     ],
 )
 def test_create_locator_tree(elems, expected: str) -> None:
-    assert tree(*elems) == expected
+    assert tree_cat(*elems) == expected
 
 
 @pytest.mark.parametrize(
     "left_attr, right_attr, expected",
     [
         (
-            BUTTON,
-            ID("ID"),
+                BUTTON,
+                id_("ID"),
             "type:button id:ID",
         ),
     ],
