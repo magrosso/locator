@@ -11,4 +11,5 @@
     "ruff.lint.run": "onSave",
     "ruff.nativeServer": "on",
     "mypy-type-checker.importStrategy": "fromEnvironment",
+    "files.refactoring.autoSave": false,
 }

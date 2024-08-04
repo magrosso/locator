@@ -10,8 +10,8 @@ from src.locator.locator import (
     TEXT,
     TYPE,
     cat_and,
-    make_elem,
-    make_tree,
+    add,
+    tree,
 )
 
 
@@ -36,7 +36,7 @@ from src.locator.locator import (
     ],
 )
 def test_multiple_attributes_locator(attrs, expected: str) -> None:
-    assert make_elem(*attrs) == expected
+    assert add(*attrs) == expected
 
 
 @pytest.mark.parametrize(
@@ -52,7 +52,7 @@ def test_multiple_attributes_locator(attrs, expected: str) -> None:
     ],
 )
 def test_single_attribute_locator(attr, expected: str) -> None:
-    assert make_elem(attr) == expected
+    assert add(attr) == expected
 
 
 @pytest.mark.parametrize(
@@ -68,7 +68,7 @@ def test_single_attribute_locator(attr, expected: str) -> None:
     ],
 )
 def test_single_attribute_as_string(attr, expected: str) -> None:
-    assert make_elem(attr) == expected
+    assert add(attr) == expected
     assert f"{attr}" == expected
 
 
@@ -81,8 +81,8 @@ def test_create_locator_from_list() -> None:
         TYPE("ty pe"),
     ]
     assert (
-        make_elem(*loc)
-        == 'id:"I D" type:button class:C-7 name:long-name-47 type:"ty pe"'
+            add(*loc)
+            == 'id:"I D" type:button class:C-7 name:long-name-47 type:"ty pe"'
     )
 
 
@@ -94,7 +94,7 @@ def test_create_locator_from_tuple() -> None:
         NAME("long name 47"),
     )
     assert (
-        make_elem(*elem) == 'type:button id:ID-3 class:buttonClass name:"long name 47"'
+            add(*elem) == 'type:button id:ID-3 class:buttonClass name:"long name 47"'
     )
 
 
@@ -112,7 +112,7 @@ def test_create_locator_from_tuple() -> None:
     ],
 )
 def test_create_locator_tree(elems, expected: str) -> None:
-    assert make_tree(*elems) == expected
+    assert tree(*elems) == expected
 
 
 @pytest.mark.parametrize(
