@@ -1,15 +1,15 @@
-from typing import Self, Callable
-from enum import Enum
+from enum import Enum, StrEnum, auto
+from typing import Callable
 
 
 class Attribute:
     """Locator attribute of format <key>:<value>"""
 
-    class AttrKey(Enum):
-        ID = "id"
-        TYPE = "type"
-        CLASS = "class"
-        NAME = "name"
+    class AttrKey(StrEnum):
+        ID = auto()
+        TYPE = auto()
+        CLASS = auto()
+        NAME = auto()
 
     def __init__(self, key: AttrKey, value: str):
         self._key: str = key.value
@@ -26,70 +26,48 @@ class Attribute:
     def __str__(self) -> str:
         return f"{self._key}:{self._value}"
 
-    # Create Attribute as objects
-    @classmethod
-    def _id(cls, id_val: str) -> Self:
-        return cls(Attribute.AttrKey.ID, id_val)
-
-    @classmethod
-    def _name(cls, name_val: str) -> Self:
-        return cls(Attribute.AttrKey.NAME, name_val)
-
-    @classmethod
-    def _type(cls, type_val: str) -> Self:
-        return cls(Attribute.AttrKey.TYPE, type_val)
-
-    @classmethod
-    def _class(cls, class_val: str) -> Self:
-        return cls(Attribute.AttrKey.CLASS, class_val)
-
     # Create Attribute as string
     @classmethod
     def _id_str(cls, id_val: str) -> str:
-        return cls._id(id_val=id_val).as_string
+        return cls(Attribute.AttrKey.ID, id_val).as_string
 
     @classmethod
     def _name_str(cls, name_val: str) -> str:
-        return cls._name(name_val=name_val).as_string
+        return cls(Attribute.AttrKey.NAME, name_val).as_string
 
     @classmethod
     def _type_str(cls, type_val: str) -> str:
-        return cls._type(type_val=type_val).as_string
+        return cls(Attribute.AttrKey.TYPE, type_val).as_string
 
     @classmethod
     def _class_str(cls, class_val: str) -> str:
-        return cls._class(class_val=class_val).as_string
+        return cls(Attribute.AttrKey.CLASS, class_val).as_string
 
 
-# Constant Attribute shortcuts returning string
-BUTTON: str = Attribute._type(type_val="button").as_string  # "type:button"
-TEXT: str = Attribute._type(type_val="text").as_string  # "type:text"
-COMBO: str = Attribute._type(type_val="combobox").as_string  # "type:combobox"
-LIST_ITEM: str = Attribute._type(type_val="listItem").as_string  # "type:listItem"
-
-# Attribute shortcuts: functions returning str
 ID: Callable[[str], str] = Attribute._id_str  # "id:<id_value>"
 TYPE: Callable[[str], str] = Attribute._type_str  # "type:<typevalue>"
 CLASS: Callable[[str], str] = Attribute._class_str  # "class:<class_value>"
 NAME: Callable[[str], str] = Attribute._name_str  # "name:<name_value>"
 
-
-def _cat_attributes(*elems, cat_op: str) -> str:
-    return cat_op.join(elems)
-
-
-def elem_dict(*elems) -> list[dict[str, str]]:
-    """Create a list of dictionaries
-
-    Returns:
-        dict[str, str]: _description_
-    """
-    return [elem.as_dict() for elem in elems]
+# Type element shortcuts
+BUTTON: str = TYPE("button")  # "type:button"
+TEXT: str = TYPE("text")  # "type:text"
+COMBO: str = TYPE("combobox")  # "type:combobox"
+LIST_ITEM: str = TYPE("listItem")  # "type:listItem"
 
 
-def make_elem(*elems) -> str:
-    return _cat_attributes(*elems, cat_op=" ")
+class CatOp(Enum):
+    AND = " "
+    PARENT = " > "
 
 
-def make_tree(*elems) -> str:
-    return _cat_attributes(*elems, cat_op=" > ")
+def cat(*elems: str, cat_op: CatOp) -> str:
+    return cat_op.value.join(elems)
+
+
+def make_elem(*elems: str) -> str:
+    return cat(*elems, cat_op=CatOp.AND)
+
+
+def make_tree(*elems: str) -> str:
+    return cat(*elems, cat_op=CatOp.PARENT)

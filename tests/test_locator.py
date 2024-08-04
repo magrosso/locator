@@ -1,15 +1,15 @@
 import pytest
 
-
 from src.locator.locator import (
     BUTTON,
     CLASS,
-    TEXT,
     COMBO,
-    LIST_ITEM,
     ID,
-    TYPE,
+    LIST_ITEM,
     NAME,
+    TEXT,
+    TYPE,
+    cat_and,
     make_elem,
     make_tree,
 )
@@ -113,3 +113,17 @@ def test_create_locator_from_tuple() -> None:
 )
 def test_create_locator_tree(elems, expected: str) -> None:
     assert make_tree(*elems) == expected
+
+
+@pytest.mark.parametrize(
+    "left_attr, right_attr, expected",
+    [
+        (
+            BUTTON,
+            ID("ID"),
+            "type:button id:ID",
+        ),
+    ],
+)
+def test_addition(left_attr, right_attr, expected) -> None:
+    assert cat_and(left_attr, right_attr) == expected
