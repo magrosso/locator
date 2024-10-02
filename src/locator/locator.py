@@ -1,4 +1,5 @@
 from enum import Enum, StrEnum, auto
+from typing import NamedTuple
 
 
 class LocKey(StrEnum):
@@ -8,9 +9,21 @@ class LocKey(StrEnum):
     NAME = auto()
 
 
-def _make_attr(key: LocKey, value: str) -> str:
-    value: str = f'"{value}"' if " " in value or not value else value
-    return f"{key.value}:{value}"
+# Type element shortcuts
+class Type(Enum):
+    BUTTON: str = "button"
+    TEXT: str = "text"
+    COMBO: str = "combobox"
+    LIST_ITEM: str = "listItem"
+
+
+class Attribute(NamedTuple):
+    key: LocKey
+    value: str
+
+    def __str__(self):
+        value: str = f'"{self.value}"' if " " in self.value or not self.value else self.value
+        return f"{self.key.value}:{value}"
 
 
 def and_cat(*attrs: str) -> str:
@@ -22,23 +35,16 @@ def tree_cat(*attrs: str) -> str:
 
 
 def id_(id_val: str) -> str:
-    return _make_attr(key=LocKey.ID, value=id_val)
+    return str(Attribute(key=LocKey.ID, value=id_val))
 
 
 def name_(name_val: str) -> str:
-    return _make_attr(key=LocKey.NAME, value=name_val)
+    return str(Attribute(key=LocKey.NAME, value=name_val))
 
 
-def type_(type_val: str) -> str:
-    return _make_attr(key=LocKey.TYPE, value=type_val)
+def type_(type_val: Type) -> str:
+    return str(Attribute(key=LocKey.TYPE, value=type_val.value))
 
 
 def class_(class_val: str) -> str:
-    return _make_attr(key=LocKey.CLASS, value=class_val)
-
-
-# Type element shortcuts
-BUTTON: str = "button"
-TEXT: str = "text"
-COMBO: str = "combobox"
-LIST_ITEM: str = "listItem"
+    return str(Attribute(key=LocKey.CLASS, value=class_val))
