@@ -34,17 +34,17 @@ def tree_cat(*attrs: str) -> str:
     return " > ".join(attrs)
 
 
-def id_(id_val: str) -> str:
+def id(id_val: str) -> str:
     return str(Attribute(key=LocKey.ID, value=id_val))
 
 
-def name_(name_val: str) -> str:
+def name(name_val: str) -> str:
     return str(Attribute(key=LocKey.NAME, value=name_val))
 
 
-def type_(type_val: Type) -> str:
+def type(type_val: Type) -> str:
     return str(Attribute(key=LocKey.TYPE, value=type_val.value))
 
 
-def class_(class_val: str) -> str:
+def cls(class_val: str) -> str:
     return str(Attribute(key=LocKey.CLASS, value=class_val))

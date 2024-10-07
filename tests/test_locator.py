@@ -2,13 +2,13 @@ import pytest
 
 from src.locator.locator import (
     BUTTON,
-    class_,
+    cls,
     COMBO,
-    id_,
+    id,
     LIST_ITEM,
-    name_,
+    name,
     TEXT,
-    type_,
+    type,
     cat_and,
     and_cat,
     tree_cat,
@@ -18,19 +18,19 @@ from src.locator.locator import (
 @pytest.mark.parametrize(
     "attrs, expected",
     [
-        ((id_("ID 0"),), 'id:"ID 0"'),
-        ((class_(" "),), 'class:" "'),
+        ((id("ID 0"),), 'id:"ID 0"'),
+        ((cls(" "),), 'class:" "'),
         (
-            (id_("negateButton"), BUTTON),
+            (id("negateButton"), BUTTON),
             "id:negateButton type:button",
         ),
-        ((id_(""), TEXT), 'id:"" type:text'),
+        ((id(""), TEXT), 'id:"" type:text'),
         (
-            (name_(" NAME X "), TEXT),
+            (name(" NAME X "), TEXT),
             'name:" NAME X " type:text',
         ),
         (
-            (class_("C_105 "), COMBO),
+            (cls("C_105 "), COMBO),
             'class:"C_105 " type:combobox',
         ),
     ],
@@ -42,9 +42,9 @@ def test_multiple_attributes_locator(attrs, expected: str) -> None:
 @pytest.mark.parametrize(
     "attr, expected",
     [
-        (id_("ID 0"), 'id:"ID 0"'),
-        (class_(" "), 'class:" "'),
-        (name_(" _my name-"), 'name:" _my name-"'),
+        (id("ID 0"), 'id:"ID 0"'),
+        (cls(" "), 'class:" "'),
+        (name(" _my name-"), 'name:" _my name-"'),
         (COMBO, "type:combobox"),
         (TEXT, "type:text"),
         (BUTTON, "type:button"),
@@ -58,9 +58,9 @@ def test_single_attribute_locator(attr, expected: str) -> None:
 @pytest.mark.parametrize(
     "attr, expected",
     [
-        (id_("ID 0"), 'id:"ID 0"'),
-        (class_(" "), 'class:" "'),
-        (name_(" _my name-"), 'name:" _my name-"'),
+        (id("ID 0"), 'id:"ID 0"'),
+        (cls(" "), 'class:" "'),
+        (name(" _my name-"), 'name:" _my name-"'),
         (COMBO, "type:combobox"),
         (TEXT, "type:text"),
         (BUTTON, "type:button"),
@@ -74,39 +74,34 @@ def test_single_attribute_as_string(attr, expected: str) -> None:
 
 def test_create_locator_from_list() -> None:
     loc = [
-        id_("I D"),
+        id("I D"),
         BUTTON,
-        class_("C-7"),
-        name_("long-name-47"),
-        type_("ty pe"),
+        cls("C-7"),
+        name("long-name-47"),
+        type("ty pe"),
     ]
-    assert (
-            and_cat(*loc)
-            == 'id:"I D" type:button class:C-7 name:long-name-47 type:"ty pe"'
-    )
+    assert and_cat(*loc) == 'id:"I D" type:button class:C-7 name:long-name-47 type:"ty pe"'
 
 
 def test_create_locator_from_tuple() -> None:
     elem = (
         BUTTON,
-        id_("ID-3"),
-        class_("buttonClass"),
-        name_("long name 47"),
+        id("ID-3"),
+        cls("buttonClass"),
+        name("long name 47"),
     )
-    assert (
-            and_cat(*elem) == 'type:button id:ID-3 class:buttonClass name:"long name 47"'
-    )
+    assert and_cat(*elem) == 'type:button id:ID-3 class:buttonClass name:"long name 47"'
 
 
 @pytest.mark.parametrize(
     "elems, expected",
     [
         (
-            (BUTTON, id_("ID"), name_("NAME ")),
+            (BUTTON, id("ID"), name("NAME ")),
             'type:button > id:ID > name:"NAME "',
         ),
         (
-            (id_("ID-55"),),
+            (id("ID-55"),),
             "id:ID-55",
         ),
     ],
@@ -119,8 +114,8 @@ def test_create_locator_tree(elems, expected: str) -> None:
     "left_attr, right_attr, expected",
     [
         (
-                BUTTON,
-                id_("ID"),
+            BUTTON,
+            id("ID"),
             "type:button id:ID",
         ),
     ],
