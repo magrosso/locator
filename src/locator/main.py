@@ -1,32 +1,32 @@
 from enum import Enum
 
-# from locator import and_cat, tree_cat, name, class_, type_, id, Type, Attribute, LocKey
+# from src.locator import and_cat, tree_cat, name, cls, type, id, Type, Attribute, LocKey
 
-import locator
+from locator_path import Loc, Type, LocKey, Attribute
 
-a1: str = f"{locator.type(locator.Type.TEXT)} {locator.name("")}"
-a2: str = locator.cls("a2")
+a1: str = f"{Loc.type(Type.TEXT)} {Loc.name("")}"
+a2: str = Loc.cls("a2")
 
-e1: str = locator.and_cat(locator.type(locator.Type.BUTTON))
-e2: str = locator.and_cat(locator.cls("C"), locator.id("id"), locator.name("N"))
-e3: str = locator.and_cat(a1, a2)
+e1: str = Loc.and_cat(Loc.type(Type.BUTTON))
+e2: str = Loc.and_cat(Loc.cls("C"), Loc.id("id"), Loc.name("N"))
+e3: str = Loc.and_cat(a1, a2)
 
-t1: str = locator.tree_cat(e3, e2, e1)
-t2: str = locator.tree_cat(e1)
-t3: str = locator.tree_cat(locator.id("id-33"), locator.name(" N7"), locator.type(locator.Type.BUTTON))
+t1: str = Loc.tree_cat(e3, e2, e1)
+t2: str = Loc.tree_cat(e1)
+t3: str = Loc.tree_cat(Loc.id("id-33"), Loc.name(" N7"), Loc.type(Type.BUTTON))
 
 
 # @unique
 class Locator(Enum):
-    LOC_1: str = locator.tree_cat(locator.id("id-33"), locator.name(" N7"), locator.type(locator.Type.BUTTON))
-    LOC_2: str = locator.and_cat(locator.id("id-33"), locator.name(" N7"), locator.type(locator.Type.BUTTON))
-    LOC_3: str = locator.id("id 0")
-    LOC_4: str = locator.tree_cat(locator.cls("C "), locator.id("id 1"))
-    LOC_5: str = locator.tree_cat(locator.id("id 1"), locator.and_cat(locator.id("id iix"), locator.name("n0")))
-    LOC_6: str = locator.and_cat(locator.id("id 1"), locator.tree_cat(locator.id("is iiu"), locator.name("n-669")))
+    LOC_1: str = Loc.tree_cat(Loc.id("id-33"), Loc.name(" N7"), Loc.type(Type.BUTTON))
+    LOC_2: str = Loc.and_cat(Loc.id("id-33"), Loc.name(" N7"), Loc.type(Type.BUTTON))
+    LOC_3: str = Loc.id("id 0")
+    LOC_4: str = Loc.tree_cat(Loc.cls("C "), Loc.id("id 1"))
+    LOC_5: str = Loc.tree_cat(Loc.id("id 1"), Loc.and_cat(Loc.id("id iix"), Loc.name("n0")))
+    LOC_6: str = Loc.and_cat(Loc.id("id 1"), Loc.tree_cat(Loc.id("is iiu"), Loc.name("n-669")))
     LOC_8: str = LOC_3
-    LOC_7: str = locator.and_cat(LOC_1, LOC_2, LOC_3)
-    LOC_100: str = locator.Attribute(key=locator.LocKey.ID, value="idval")
+    LOC_7: str = Loc.and_cat(LOC_1, LOC_2, LOC_3)
+    LOC_100: str = Attribute(key=LocKey.ID, value="idval")
 
 
 print(Locator.LOC_1.value)
